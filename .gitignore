@@ -1,4 +1,4 @@
 node_modules/
-package.json
-package-lock.json
-employees.xlsx
+package.json/
+package-lock.json/
+employees.xlsx/
