@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Submissions</title>
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- SheetJS library for Excel export -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, Arial, sans-serif;
+      background: url('../images/admin-bg-form.jpg') no-repeat center center fixed;
+      background-size: cover;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: -1;
+    }
+    .admin-card {
+      max-width: 1000px;
+      margin: 40px auto;
+      background: rgba(224, 222, 222, 0.85);
+      padding: 20px 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+      backdrop-filter: blur(8px);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+    .filter-group {
+      margin-bottom: 15px;
+      text-align: center;
+    }
+    select, button {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: 1px solid #aaa;
+      font-size: 14px;
+      margin-left: 5px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: rgba(255,255,255,0.95);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    table th, table td {
+      padding: 10px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 13px;
+    }
+    table th {
+      background: rgba(200,200,200,0.8);
+    }
+    .verified { color: green; font-weight: bold; }
+    .partial { color: orange; font-weight: bold; }
+    .not-verified { color: red; font-weight: bold; }
+    tbody {
+      display: block;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    thead, tbody tr {
+      display: table;
+      width: 100%;
+      table-layout: fixed;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="admin-card">
+    <h2>Employee Submissions</h2>
+
+    <div class="filter-group">
+      <label for="statusFilter">Filter by Verification:</label>
+      <select id="statusFilter">
+        <option value="all">All</option>
+        <option value="verified">Fully Verified</option>
+        <option value="partial">Partially Verified</option>
+        <option value="not-verified">Not Verified</option>
+      </select>
+
+      <!-- Download Excel Button -->
+      <button id="downloadExcel">Download Excel</button>
+
+      <!-- Delete All Button -->
+      <button id="deleteAll" style="background:#e74c3c; color:white;">Delete All Data</button>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Employee Name</th>
+          <th>Manager</th>
+          <th>Designation</th>
+          <th>Department</th>
+          <th>Manager Verified</th>
+          <th>Designation Verified</th>
+          <th>Department Verified</th>
+          <th>Working Mode</th>
+          <th>User Type</th>
+          <th>Device</th>
+          <th>Client Access</th>
+          <th>Email Access</th>
+          <th>Platform Access</th>
+          <th>Pendrive Access</th>
+          <th>Comments</th>
+          <th>Submitted At</th>
+        </tr>
+      </thead>
+      <tbody id="submissionRows"></tbody>
+    </table>
+  </div>
+
+  <script>
+    const statusFilter = document.getElementById("statusFilter");
+    const submissionRows = document.getElementById("submissionRows");
+
+    async function loadSubmissions(){
+      try {
+        const res = await fetch("/api/submissions");
+        const data = await res.json();
+        renderTable(data);
+      } catch(e){
+        console.error(e);
+      }
+    }
+
+    function renderTable(data){
+      const filter = statusFilter.value;
+      submissionRows.innerHTML = "";
+
+      data.forEach(s=>{
+        let statusClass = "not-verified";
+        if(s.managerVerified && s.designationVerified && s.departmentVerified){
+          statusClass = "verified";
+        } else if(s.managerVerified || s.designationVerified || s.departmentVerified){
+          statusClass = "partial";
+        }
+
+        if(filter==="verified" && statusClass!=="verified") return;
+        if(filter==="partial" && statusClass!=="partial") return;
+        if(filter==="not-verified" && statusClass!=="not-verified") return;
+
+        let choiceObj = {};
+        try { choiceObj = JSON.parse(s.choice || "{}"); } catch(e){}
+
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${s.employeeName}</td>
+          <td>${s.manager}</td>
+          <td>${s.designation}</td>
+          <td>${s.department}</td>
+          <td class="${s.managerVerified?'verified':'not-verified'}">${s.managerVerified}</td>
+          <td class="${s.designationVerified?'verified':'not-verified'}">${s.designationVerified}</td>
+          <td class="${s.departmentVerified?'verified':'not-verified'}">${s.departmentVerified}</td>
+          <td>${choiceObj.workingMode||''}</td>
+          <td>${choiceObj.userType||''}</td>
+          <td>${choiceObj.device||''}</td>
+          <td>${(choiceObj.clientAccess||[]).join(", ")}</td>
+          <td>${(choiceObj.emailAccess||[]).join(", ")}</td>
+          <td>${(choiceObj.platformAccess||[]).map(p=>p.name + ": " + p.description).join("; ")}</td>
+          <td>${choiceObj.pendriveAccess||''}</td>
+          <td>${s.comments||''}</td>
+          <td>${new Date(s.createdAt).toLocaleString()}</td>
+        `;
+        submissionRows.appendChild(row);
+      });
+    }
+
+    statusFilter.addEventListener("change", loadSubmissions);
+
+    // Excel download
+    document.getElementById("downloadExcel").addEventListener("click", async () => {
+      try {
+        const res = await fetch("/api/submissions");
+        const data = await res.json();
+        if (!data.length) { alert("No submissions to download."); return; }
+
+        const wsData = data.map(s => {
+          let choiceObj = {};
+          try { choiceObj = JSON.parse(s.choice||"{}"); } catch(e){}
+
+          return {
+            "Employee Name": s.employeeName,
+            "Manager": s.manager,
+            "Designation": s.designation,
+            "Department": s.department,
+            "Manager Verified": s.managerVerified,
+            "Designation Verified": s.designationVerified,
+            "Department Verified": s.departmentVerified,
+            "Working Mode": choiceObj.workingMode || "",
+            "User Type": choiceObj.userType || "",
+            "Device": choiceObj.device || "",
+            "Client Access": (choiceObj.clientAccess||[]).join(", "),
+            "Email Access": (choiceObj.emailAccess||[]).join(", "),
+            "Platform Access": (choiceObj.platformAccess||[]).map(p=>p.name + ": " + p.description).join("; "),
+            "Pendrive Access": choiceObj.pendriveAccess || "",
+            "Comments": s.comments || "",
+            "Submitted At": new Date(s.createdAt).toLocaleString()
+          };
+        });
+
+        const ws = XLSX.utils.json_to_sheet(wsData);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Submissions");
+        XLSX.writeFile(wb, "Employee_Submissions.xlsx");
+      } catch(err) {
+        console.error(err);
+        alert("Failed to download Excel file.");
+      }
+    });
+
+    // Delete All Data
+    document.getElementById("deleteAll").addEventListener("click", async () => {
+      if (!confirm("⚠️ Are you sure you want to delete ALL submissions? This cannot be undone.")) return;
+      try {
+        const res = await fetch("/api/submissions", { method: "DELETE" });
+        const result = await res.json();
+        alert(result.message);
+        loadSubmissions(); // refresh table after delete
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete data.");
+      }
+    });
+
+    loadSubmissions();
+  </script>
+</body>
+</html>

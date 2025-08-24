@@ -1,0 +1,232 @@
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Body & background */
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  min-height: 100vh;
+  background: url("../images/bg-form.jpg") no-repeat center center fixed;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.4);
+  z-index: 0;
+}
+
+/* Card */
+.card {
+  position: relative;
+  z-index: 1;
+  background-color: rgba(255,255,255,0.95);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  padding: 30px;
+  width: 100%;
+  max-width: 700px;
+  animation: fadeIn 0.6s ease;
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #222;
+}
+
+/* Form rows */
+.row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.row label {
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+/* Inputs & selects & textarea */
+input, select, textarea {
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: #0078D7;
+  box-shadow: 0 0 6px rgba(0,120,215,0.3);
+  outline: none;
+}
+
+/* Buttons */
+button {
+  background-color: #0078D7;
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 14px;
+  margin: 5px; /* ✅ space between next/back */
+}
+
+button:hover {
+  background-color: #005ea3;
+}
+
+/* Progress container */
+.progress-container {
+  position: relative;
+  width: 100%;
+  margin-bottom: 30px;
+}
+
+.progress-bar {
+  height: 6px;
+  background-color: #0078D7;
+  border-radius: 5px;
+  transition: width 0.6s ease;
+}
+
+/* Progress steps (numbers + checkmarks) */
+.progress-steps {
+  position: absolute;
+  top: -12px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  pointer-events: none;
+}
+
+.progress-step {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #ddd;
+  color: #555;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.progress-step.active {
+  background: #0078D7;
+  color: #fff;
+}
+.progress-step.completed {
+  background: #28a745; /* green */
+  color: #fff;
+}
+
+/* Step visibility */
+.step {
+  display: none;
+  animation: fadeIn 0.6s ease;
+}
+.step.active {
+  display: block;
+}
+
+/* Verify checkbox & icon */
+.verify-checkbox {
+  margin-left: 10px;
+  accent-color: #0078D7;
+}
+
+.verify-icon {
+  margin-left: 6px;
+  color: green;
+  display: none;
+  font-weight: bold;
+}
+
+.verify-checkbox:checked + .verify-icon {
+  display: inline;
+}
+
+/* Results dropdown */
+#results {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  max-height: 180px;
+  overflow-y: auto;
+  background: #fff;
+  display: none;
+  position: absolute;
+  width: 100%;
+  z-index: 5;
+}
+
+#results div {
+  padding: 8px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+#results div:hover {
+  background: #f0f0f0;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+
+/* Muted text */
+.muted {
+  font-size: 12px;
+  color: #666;
+}
+
+/* ---------------- Step 3 Custom Styles ---------------- */
+
+/* Group styling for radio/checkbox groups */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group strong {
+  display: block;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+/* Inline radio & checkbox labels */
+.form-group label {
+  margin-right: 15px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+/* Platform description hidden by default */
+.platform-desc {
+  display: none;
+  width: 95%;
+  margin: 5px 0 15px 25px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  background: rgba(255,255,255,0.8);
+  font-size: 13px;
+}

@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thank You</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f0f0f0;
+    }
+    .message {
+      background: #fff;
+      padding: 40px 60px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      text-align: center;
+    }
+    h1 { color: green; margin-bottom: 10px; }
+    p { margin: 5px 0; }
+  </style>
+</head>
+<body>
+  <div class="message">
+    <h1>Thank You!</h1>
+    <p>Your response has been submitted successfully.</p>
+    <p id="refId"></p>
+  </div>
+
+  <script>
+    // If you pass submissionId via URL, show it
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get('id');
+    if(ref){
+      document.getElementById('refId').textContent = "Reference ID: " + ref;
+    }
+  </script>
+</body>
+</html>

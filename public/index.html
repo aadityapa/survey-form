@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Employee Request Form</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    
+  <div class="card">
+    <!-- Progress Wrapper -->
+    <div class="progress-container">
+      <div class="progress-bar" id="progressBar"></div>
+      <div class="progress-steps">
+        <div class="progress-step" data-step="1">1</div>
+        <div class="progress-step" data-step="2">2</div>
+        <div class="progress-step" data-step="3">3</div>
+      </div>
+    </div>
+
+    <h2>Access Control Survey</h2>
+
+    <!-- Step 1 -->
+    <div class="step active" id="step1">
+      <div class="row">
+        <label for="search">Search Employee</label>
+        <div style="position: relative;">
+          <input id="search" type="text" placeholder="Type employee name..." autocomplete="off">
+          <div id="results"></div>
+          <div class="muted">Type at least 2 characters to search</div>
+        </div>
+      </div>
+      <div class="row">
+        <button id="next1">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step" id="step2">
+      <div class="row">
+        <label>Manager</label>
+        <input id="manager" type="text" readonly>
+        <input type="checkbox" class="verify-checkbox" id="managerVerified">
+        <span class="verify-icon">✔</span>
+      </div>
+      <div class="row">
+        <label>Designation</label>
+        <input id="designation" type="text" readonly>
+        <input type="checkbox" class="verify-checkbox" id="designationVerified">
+        <span class="verify-icon">✔</span>
+      </div>
+      <div class="row">
+        <label>Department</label>
+        <input id="department" type="text" readonly>
+        <input type="checkbox" class="verify-checkbox" id="departmentVerified">
+        <span class="verify-icon">✔</span>
+      </div>
+      <div class="row">
+        <label>Final Choice</label>
+        <select id="choice">
+          <option value="">-- Select --</option>
+          <option value="Approve">Approve</option>
+          <option value="Reject">Reject</option>
+          <option value="Hold">Hold</option>
+        </select>
+      </div>
+      <div class="row">
+        <label>Comments</label>
+        <textarea id="comments" placeholder="Enter remarks..."></textarea>
+      </div>
+      <div class="row">
+        <button id="back2">Back</button>
+        <button id="next2">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step" id="step3">
+      <h3>Session Selection</h3>
+
+      <!-- 1. Working Mode -->
+      <div class="row">
+        <label><strong>1. Working Mode</strong></label><br>
+        <label><input type="radio" name="workingMode" value="WFH"> WFH</label>
+        <label><input type="radio" name="workingMode" value="On-Site"> On-Site</label>
+        <label><input type="radio" name="workingMode" value="Client-Site"> Client-Site</label>
+      </div>
+
+      <!-- 2. User Type -->
+      <div class="row">
+        <label><strong>2. User Type</strong></label><br>
+        <label><input type="radio" name="userType" value="Contractual"> Contractual</label>
+        <label><input type="radio" name="userType" value="Permanent"> Permanent</label>
+      </div>
+
+      <!-- 3. Device Allocated -->
+      <div class="row">
+        <label><strong>3. Device Allocated</strong></label><br>
+        <label><input type="radio" name="device" value="Laptop"> Laptop</label>
+        <label><input type="radio" name="device" value="Desktop"> Desktop</label>
+      </div>
+
+      <!-- 4. Required Client Access -->
+      <div class="row">
+        <label><strong>4. Required Client Access</strong></label><br>
+        <label><input type="checkbox" name="clientAccess" value="SBI"> SBI</label>
+        <label><input type="checkbox" name="clientAccess" value="Tata AIG"> Tata AIG</label>
+        <label><input type="checkbox" name="clientAccess" value="Niva Bupa"> Niva Bupa</label>
+        <label><input type="checkbox" name="clientAccess" value="Star"> Star</label>
+      </div>
+
+      <!-- 5. Email Access -->
+      <div class="row">
+        <label><strong>5. Email Access</strong></label><br>
+        <label><input type="checkbox" name="emailAccess" value="Claims"> Claims</label>
+        <label><input type="checkbox" name="emailAccess" value="TPA-Claims"> TPA-Claims</label>
+        <label><input type="checkbox" name="emailAccess" value="Insurance"> Insurance</label>
+      </div>
+
+      <!-- 6. Platform Access -->
+      <div class="row">
+        <label><strong>6. Platform Access</strong></label><br>
+
+        <label><input type="checkbox" class="platformCheck" value="Social Media"> Social Media</label>
+        <textarea class="platform-desc" data-platform="Social Media" placeholder="Enter description for Social Media"></textarea>
+
+        <label><input type="checkbox" class="platformCheck" value="AI Platform"> AI Platform</label>
+        <textarea class="platform-desc" data-platform="AI Platform" placeholder="Enter description for AI Platform"></textarea>
+
+        <label><input type="checkbox" class="platformCheck" value="Banking"> Banking</label>
+        <textarea class="platform-desc" data-platform="Banking" placeholder="Enter description for Banking"></textarea>
+
+        <label><input type="checkbox" class="platformCheck" value="WhatsApp"> WhatsApp</label>
+        <textarea class="platform-desc" data-platform="WhatsApp" placeholder="Enter description for WhatsApp"></textarea>
+
+        <label><input type="checkbox" class="platformCheck" value="Job Search Platform"> Job Search Platform</label>
+        <textarea class="platform-desc" data-platform="Job Search Platform" placeholder="Enter description for Job Search Platform"></textarea>
+      </div>
+
+      <!-- 7. Pendrive Access -->
+      <div class="row">
+        <label><strong>7. Pendrive Access</strong></label><br>
+        <label><input type="radio" name="pendriveAccess" value="Yes"> Yes</label>
+        <label><input type="radio" name="pendriveAccess" value="No"> No</label>
+      </div>
+
+      <div class="row">
+        <button id="back3">Back</button>
+        <button id="submitBtn">Submit ✔</button>
+      </div>
+      <div id="msg" class="muted"></div>
+    </div>
+
+    <!-- Hidden fields populated from Step 1 -->
+    <input type="hidden" id="employeeName">
+    <input type="hidden" id="srn">
+  </div>
+
+  <script src="js/form.js"></script>
+</body>
+</html>
